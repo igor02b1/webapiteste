@@ -17,10 +17,17 @@ namespace webapiteste.Controllers
             _context = context;
         }
 
+        [HttpGet("produtos")]
+        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
+        {
+            return _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
+
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categoria = _context.Categorias.ToList();
+            var categoria = _context.Categorias.AsNoTracking().ToList();
             if(categoria is null)
             {
                 return NotFound("Nenhuma categoria encontrada...");
@@ -32,7 +39,7 @@ namespace webapiteste.Controllers
         [HttpGet("{id:int}", Name = "ObterCategoria") ]
         public ActionResult<Categoria> GetPorId(int id)
         {
-            var categoria = _context.Categorias.FirstOrDefault(x => x.CategoriaId == id);
+            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(x => x.CategoriaId == id);
             if(categoria is null)
             {
                 return NotFound("Nenhuma categoria encontrada...");
